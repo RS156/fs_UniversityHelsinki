@@ -8,3 +8,10 @@ Content-Type: application/json
     "content" : "VS code rest client is pretty handy tool",
     "important" : true
 }
+
+###
+GET http://localhost:3001/api/notes/skfofodsfd
+
+
+###
+DELETE http://localhost:3001/api/notes/63fa55f9c0dfebe581faa7d3
