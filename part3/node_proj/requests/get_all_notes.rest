@@ -5,6 +5,22 @@ POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-    "content" : "VS code rest client is pretty handy tool",
+    "content" : "tes",
+    "important" : true
+}
+
+###
+GET http://localhost:3001/api/notes/skfofodsfd
+
+
+###
+DELETE http://localhost:3001/api/notes/63fa55f9c0dfebe581faa7d3
+
+###
+PUT http://localhost:3001/api/notes/63f6df830a1033df23d44900
+Content-Type: application/json
+
+{
+    "content" : "test2",
     "important" : true
 }
