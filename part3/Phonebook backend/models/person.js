@@ -4,8 +4,9 @@ const mongoose= require("mongoose");
 //     console.log("Please enter password as argument");
 //     process.exit()
 // }
-
-
+const phoneValidator = n=> {
+    return /^(?=.{8,})\d{2,3}-\d+$/.test(n);
+}
 //const password = process.argv[2]
 const url = process.env.MONGO_DB_URI
 mongoose.set('strictQuery', false)
@@ -18,8 +19,14 @@ mongoose.connect(url).then(res =>{
 
 
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String,
+    name: {
+        type : String,
+        minlength : 3,
+    },
+    number: {
+        type: String,
+        validate: phoneValidator,
+    }
 })
 
 personSchema.set('toJSON', {
