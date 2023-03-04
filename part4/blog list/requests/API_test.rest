@@ -7,3 +7,20 @@ Content-Type: application/json
     "url" : "http://localhost:3003/api/blogs",
     "likes" : 0
 }
+
+###
+DELETE http://localhost:3003/api/blogs/6402e921137a77bde56735c9
+
+###
+PUT http://localhost:3003/api/blogs/6402f32f37ae38fbc161ddbd
+Content-Type: application/json
+
+{
+    "title" : "Second blog post updates",
+    "author" : "Rishabh Sarkar 2",
+    "url" : "http://localhost:3003/api/blogs/up",
+    "likes" : 1
+}
+
+###
+GET http://localhost:3003/api/blogs
