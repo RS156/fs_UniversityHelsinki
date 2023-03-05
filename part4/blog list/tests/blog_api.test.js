@@ -2,6 +2,8 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const user = require('../models/user')
+const User =  require('../models/user')
 const logger = require('../utils/logger')
 const helper = require('./test_helper')
 
@@ -106,7 +108,6 @@ describe('deletion of blogs', () =>{
     test('deletes specific blog with status as 204', async ()=>{
         const blogsAtStart = await helper.blogsInDb()
         const blogToDelete = blogsAtStart[0]
-        console.log(blogToDelete);
         await api.delete(`/api/blogs/${blogToDelete.id}`)
         .expect(204)
 
@@ -230,4 +231,73 @@ describe('updating exisitng blog', () =>{
         .not
         .toEqual(expect.objectContaining(updatedBlog))
     })
+})
+
+describe('creating users with 1 user intially stored in db', () =>{
+    beforeEach(async ()=>{
+        await User.deleteMany({})
+        const newUser = {
+            "username" : "root",
+            "name" : "Super User",
+            "password": "Password"
+        }
+        await helper.addUserinDb(newUser)
+    })
+
+    test('new user is created successfully with unique username', async () =>{
+        const usersAtStart = await helper.usersinDb()
+        const newUser = {
+            "username" : "uniqueUser",
+            "name" : "Second User",
+            "password": "Password"
+        }
+        await api.post('/api/users')
+        .send(newUser)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await helper.usersinDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+        delete newUser.password
+        expect(usersAtEnd)
+            .toEqual(
+                expect.arrayContaining([
+                    expect.objectContaining(newUser)
+                ]))
+    })
+
+    test('user is not created with 400 status when username is less than 3 characters', async () =>{
+        const usersAtStart = await helper.usersinDb()
+        const newUser = {
+            "username" : "un",
+            "name" : "Second User",
+            "password": "Password"
+        }
+        const result = await api.post('/api/users')
+        .send(newUser)
+        .expect(400)        
+
+        expect(result.body.error).toContain('shorter than the minimum allowed length')
+        const usersAtEnd = await helper.usersinDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
+       
+    })
+
+    test('user is not created with 400 status when password is less than 3 characters', async () =>{
+        const usersAtStart = await helper.usersinDb()
+        const newUser = {
+            "username" : "newUser",
+            "name" : "Second User",
+            "password": "Pa"
+        }
+        const result = await api.post('/api/users')
+        .send(newUser)
+        .expect(400)        
+
+        expect(result.body.error).toContain('password should be atleast 3 characters')
+        const usersAtEnd = await helper.usersinDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
+    })
+
+
 })

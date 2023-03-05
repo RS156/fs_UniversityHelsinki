@@ -1,5 +1,5 @@
-const favouriteBlog = require('../utils/list_helper').favouriteBlog
-const sampleBlogList = require('./data')
+const favouriteBlog = require('../../utils/list_helper').favouriteBlog
+const sampleBlogList = require('../data')
 
 describe('favourite blog', () =>{
    

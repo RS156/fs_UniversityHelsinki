@@ -1,5 +1,5 @@
-const mostBlogs = require('../utils/list_helper').mostBlogs
-const sampleBlogList = require('./data')
+const mostBlogs = require('../../utils/list_helper').mostBlogs
+const sampleBlogList = require('../data')
 
 describe('most blogs', () =>{
    

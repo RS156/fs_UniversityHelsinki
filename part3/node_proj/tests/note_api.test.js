@@ -152,7 +152,7 @@ describe('when there is initially 1 user in db',() =>{
   test('creation succeeds with fresh username', async ()=>{
     const usersAtStart = await helper.usersInDb()
     const newUser = {
-      username : 'rs',
+      username : 'rs12',
       name : 'Rishabh Sarkar',
       password:'Password'
     }
@@ -183,8 +183,6 @@ describe('when there is initially 1 user in db',() =>{
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toHaveLength(usersAtStart.length)  
   })
-
-
 })
 
 

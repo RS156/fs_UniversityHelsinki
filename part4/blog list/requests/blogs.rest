@@ -2,10 +2,11 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title" : "Second blog post",
+    "title" : "blog post 4",
     "author" : "Rishabh Sarkar",
     "url" : "http://localhost:3003/api/blogs",
-    "likes" : 0
+    "likes" : 11,
+    "user" : "6404ecf83ebcc248e34d20a6"
 }
 
 ###
@@ -16,8 +17,8 @@ PUT http://localhost:3003/api/blogs/6402f32f37ae38fbc161ddbd
 Content-Type: application/json
 
 {
-    "title" : "Second blog post updates",
-    "author" : "Rishabh Sarkar 2",
+    "title" : "third blog post updates",
+    "author" : "Rishabh Sarkar 3",
     "url" : "http://localhost:3003/api/blogs/up",
     "likes" : 1
 }
