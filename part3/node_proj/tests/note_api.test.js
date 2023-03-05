@@ -1,14 +1,16 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const bcrypt = require('bcrypt')
 const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
 
 const Note = require('../models/note')
+const User = require('../models/user')
 
 beforeEach(async () => {
   await Note.deleteMany({})
-  await Note.insertMany(helper.initialNotes)
+  await Note.insertMany(helper.initialNotes)  
 },
   10000)
 
@@ -37,7 +39,7 @@ describe('when there is initilly some notes saved', () => {
   })
 })
 
-describe('vieweing a specific note', () => {
+describe('viewing a specific note', () => {
   test('a specific note can be viewed', async () => {
     const notesAtStart = await helper.notesInDb()
     const noteToView = notesAtStart[0]
@@ -66,6 +68,27 @@ describe('vieweing a specific note', () => {
 })
 
 describe('addition of new note', () => {
+
+let headers
+
+beforeAll(async () =>{
+  await User.deleteMany({})
+  const passwordHash = await bcrypt.hash('sekret', 10)
+  const user = new User({
+    username: 'root', passwordHash
+  })
+  await user.save()
+
+  const response = await api.post('/api/login')
+  .send({username: 'root', password : 'sekret' }) 
+  
+  const authToken = 'Bearer '+ response.body.token
+  headers = {
+    'Authorization' : authToken,
+    'Content-Type':'application/json'
+  }  
+}, 10000)
+
   test('a valid note can be added', async () => {
     const newNote = {
       content: 'async/await simplifies making async calls',
@@ -73,6 +96,7 @@ describe('addition of new note', () => {
     }
     await api
       .post('/api/notes')
+      .set(headers)
       .send(newNote)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -113,6 +137,56 @@ describe('deletion of note', () => {
     expect(contents).not.toContain(noteToDelete.content)
   })
 })
+
+describe('when there is initially 1 user in db',() =>{
+
+  beforeEach(async () =>{
+    await User.deleteMany({})
+    const passwordhash = await bcrypt.hash('sekret', 10)
+    const user = new User({
+      username: 'root', passwordhash
+    })
+    await user.save()
+  })
+
+  test('creation succeeds with fresh username', async ()=>{
+    const usersAtStart = await helper.usersInDb()
+    const newUser = {
+      username : 'rs',
+      name : 'Rishabh Sarkar',
+      password:'Password'
+    }
+    await api.post('/api/users')
+    .send(newUser)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length +1)
+    const usernames= usersAtEnd.map(u => u.username)
+    expect(usernames).toContain(newUser.username)
+  })
+
+  test('creation fails with 400 status code and message is username is already taken', async ()=>{
+    const usersAtStart = await helper.usersInDb()
+    const newUser = {
+      username : 'root',
+      name : 'Rishabh Sarkar2',
+      password:'Password'
+    }
+    const result = await api.post('/api/users')
+    .send(newUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+
+    expect(result.body.error).toContain('expected `username` to be unique')
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)  
+  })
+
+
+})
+
 
 afterAll(async () => {
   await mongoose.connection.close()
