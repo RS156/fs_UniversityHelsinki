@@ -32,7 +32,7 @@ beforeAll(async () =>{
         b.user = user._id
         return b
     })
-})
+}, 100000)
 
 beforeEach(async () => {
     await Blog.deleteMany({})
@@ -132,6 +132,23 @@ describe('addition of new blogs', () => {
             .send(newBlog)
             .expect(400)
     })
+
+    test('new Blog addition fails with 401 status if headers are not provided', async () => {
+        const newBlog = {
+            title: "New blog added for unit testing",
+            author: "Rishabh Sarkar",
+            url: "http://testurl.com",
+            likes: 12,
+        }
+        
+        await api.post('/api/blogs')  
+            .send(newBlog)
+            .expect(401)           
+
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd.length).toEqual(helper.initialBlogs.length)        
+    })
+
 })
 
 describe('deletion of blogs', () =>{

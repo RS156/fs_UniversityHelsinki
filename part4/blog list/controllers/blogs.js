@@ -14,7 +14,7 @@ blogListRouter.get('/', async (request, response) => {
 blogListRouter.post('/', async (request, response) => {
     if(!request.token)
     {
-        return response.status(400).send({error : 'no token provided'})
+        return response.status(401).send({error : 'no token provided'})
     }   
     if (!request.body.title || !request.body.url) {
         return response.status(400).end()
