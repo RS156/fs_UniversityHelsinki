@@ -1,8 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJzMTIyIiwiaWQiOiI2NDA0ZWNmODNlYmNjMjQ4ZTM0ZDIwYTYiLCJpYXQiOjE2NzgwODE1NTF9.-_ODa6Ul96KTa_AsK3dgxbeMENjKXJ_Gzn-FRHOe5oI
 
 {
-    "title" : "blog post 4",
+    "title" : "blog post 6",
     "author" : "Rishabh Sarkar",
     "url" : "http://localhost:3003/api/blogs",
     "likes" : 11,
@@ -10,7 +11,8 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3003/api/blogs/6402e921137a77bde56735c9
+DELETE http://localhost:3003/api/blogs/64058dffd62866621dd72e4e
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJzMTIyIiwiaWQiOiI2NDA0ZWNmODNlYmNjMjQ4ZTM0ZDIwYTYiLCJpYXQiOjE2NzgwODE1NTF9.-_ODa6Ul96KTa_AsK3dgxbeMENjKXJ_Gzn-FRHOe5oI
 
 ###
 PUT http://localhost:3003/api/blogs/6402f32f37ae38fbc161ddbd
@@ -18,7 +20,7 @@ Content-Type: application/json
 
 {
     "title" : "third blog post updates",
-    "author" : "Rishabh Sarkar 3",
+    "author" : "Rishabh Sarkar 4",
     "url" : "http://localhost:3003/api/blogs/up",
     "likes" : 1
 }
