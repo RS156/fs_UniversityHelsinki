@@ -1,18 +1,42 @@
-const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
-const user = require('../models/user')
 const User =  require('../models/user')
-const logger = require('../utils/logger')
 const helper = require('./test_helper')
 
 const api = supertest(app)
 
+let headers
+let initialBlogsWithUser
+
+beforeAll(async () =>{
+    await User.deleteMany({})
+    const newUser = {
+        "username" : "root",
+        "name" : "Super User",
+        "password": "Password"
+    }
+    const user = await helper.addUserinDb(newUser)
+    delete newUser.name
+    const result = await api
+    .post('/api/login')
+    .send(newUser)
+    .expect(200)
+
+    headers = {
+        'Authorization' : 'Bearer ' + result.body.token ,
+        'Content-Type' : 'application/json'
+    }
+
+    initialBlogsWithUser = helper.initialBlogs.map(b => {
+        b.user = user._id
+        return b
+    })
+})
 
 beforeEach(async () => {
     await Blog.deleteMany({})
-    await Blog.insertMany(helper.initialBlogs)
+    await Blog.insertMany(initialBlogsWithUser)
 }, 100000)
 
 describe('getting all blogs', () => {
@@ -29,11 +53,13 @@ describe('getting all blogs', () => {
             .expect(200)
             .expect('Content-Type', /application\/json/)
         expect(resultBlog.body.id).toBeDefined()
+        blogToView.user = blogToView.user.toString()
         expect(resultBlog.body).toEqual(blogToView)
     })
 })
 
 describe('addition of new blogs', () => {
+
     test('new Blog can be added', async () => {
         const newBlog = {
             title: "New blog added for unit testing",
@@ -43,6 +69,7 @@ describe('addition of new blogs', () => {
         }
         
         await api.post('/api/blogs')
+            .set(headers)
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -64,6 +91,7 @@ describe('addition of new blogs', () => {
         }
         
         await api.post('/api/blogs')
+        .set(headers)
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -86,6 +114,7 @@ describe('addition of new blogs', () => {
         }
 
         await api.post('/api/blogs')
+        .set(headers)
             .send(newBlog)
             .expect(400)
 
@@ -99,6 +128,7 @@ describe('addition of new blogs', () => {
         }  
 
         await api.post('/api/blogs')
+        .set(headers)
             .send(newBlog)
             .expect(400)
     })
@@ -109,6 +139,7 @@ describe('deletion of blogs', () =>{
         const blogsAtStart = await helper.blogsInDb()
         const blogToDelete = blogsAtStart[0]
         await api.delete(`/api/blogs/${blogToDelete.id}`)
+        .set(headers)
         .expect(204)
 
         const blogsAtEnd = await helper.blogsInDb()

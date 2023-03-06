@@ -23,7 +23,6 @@ const user = new User({
     passwordHash
 })
 const savedUser = await user.save()
-console.log(user);
 response.status(201).json(savedUser)
 })
 

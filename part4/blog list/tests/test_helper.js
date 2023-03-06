@@ -18,6 +18,7 @@ const addUserinDb = async (user) => {
         passwordHash 
     })
     await userObj.save()
+    return userObj
 }
 
 const usersinDb = async () => {
