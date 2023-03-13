@@ -4,20 +4,31 @@ import blogService from '../services/blogs'
 
 const Input = Utils.Input
 
-const CreateBlog = ({blogsState}) => {
+const CreateBlog = ({blogsState, displayNotification}) => {
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  const [blogs, setBlogs] = blogsState   
+  const [blogs, setBlogs] = blogsState  
+  
   
   const createBlog = async (event) =>{
     event.preventDefault()
-    const response = await blogService.create({title, author, url})
+    try{
+      const response = await blogService.create({title, author, url})
+      displayNotification({info:`a new blog '${response.title}' by ${response.author} added`, 
+      className:'notification'})
     setBlogs(await blogService.getAll()) 
     setTitle('')
     setAuthor('')
     setUrl('')
+    }
+    catch(exception)
+    {
+      displayNotification({info:`blog was not added. Message ${exception.message}`, 
+      className:'notification error'})
+    }
+    
   }
   
  return (

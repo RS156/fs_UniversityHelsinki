@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Note from './components/Note'
 import LoginForm from './components/LoginForm'
 import AddNoteForm from './components/AddNoteForm'
 import noteService from './services/notes'
+import Togglable from "./components/Togglable";
 
 const Notification = ({ message }) => {
     if (message === null) {
@@ -33,6 +34,8 @@ const App = () => {
     const [showAll, setShowAll] = useState(true)
     const [errorMessage, setErrorMessage] = useState(null)
     const [user, setUser] = useState(null)
+    const [loginVisible, setLoginVisible] = useState(false)
+    const noteFormRef = useRef()
 
     const hook = () => {
         console.log('effect');
@@ -54,9 +57,8 @@ const App = () => {
             noteService.setToken(user.token)
         }
 
-    }, [])
-    console.log(notes);
-    console.log('render', notes.length, 'notes');
+    }, [])    
+    console.log('noteform ref', noteFormRef);
 
     const notesToDisplay = showAll ? notes : notes.filter(note => note.important)
 
@@ -82,18 +84,24 @@ const App = () => {
         setUser(null)   
      }
 
+
+
     return (
         <div>
             <h1>Notes</h1>
             <Notification message={errorMessage} />
-
-            {!user && <LoginForm setUser={setUser} setErrorMessage={setErrorMessage} />}
+            {!user &&
+            <Togglable buttonLabel = 'login'>
+            <LoginForm setUser={setUser} setErrorMessage={setErrorMessage} /> 
+            </Togglable>}
 
             {user && <div>
                 <p>{user.name} is logged in</p>
-                <AddNoteForm noteState={[notes, setNotes]} />
+                <Togglable buttonLabel='new note' ref ={noteFormRef} >
+                <AddNoteForm noteState={[notes, setNotes]} noteFormRef={noteFormRef} />
+                </Togglable>                
                 <button onClick={handleLogout}>
-                    Logout </button>
+                Logout </button>
             </div>
             }
 

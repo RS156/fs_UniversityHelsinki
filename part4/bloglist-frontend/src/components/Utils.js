@@ -5,4 +5,13 @@ const Input = ({ inpState, type }) => {
     )
 }
 
-export default { Input }
+const Notification = ({info, className}) => {
+    if(info===null)
+    {
+        return null
+    }
+    return (<div className={className}>{info}</div>)
+}
+
+
+export default { Input, Notification }
