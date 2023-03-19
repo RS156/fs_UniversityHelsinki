@@ -1,10 +1,11 @@
 import { useState } from "react"
 import Utils from "./Utils"
 import blogService from '../services/blogs'
+import Togglable from "./Togglable"
 
 const Input = Utils.Input
 
-const CreateBlog = ({blogsState, displayNotification}) => {
+const CreateBlogBody = ({blogsState, displayNotification, blogFormRef, onToggle}) => {
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -21,14 +22,14 @@ const CreateBlog = ({blogsState, displayNotification}) => {
     setBlogs(await blogService.getAll()) 
     setTitle('')
     setAuthor('')
-    setUrl('')
+    setUrl('')    
     }
     catch(exception)
     {
       displayNotification({info:`blog was not added. Message ${exception.message}`, 
       className:'notification error'})
     }
-    
+    blogFormRef.current.toggleVisibility()    
   }
   
  return (
@@ -44,8 +45,22 @@ const CreateBlog = ({blogsState, displayNotification}) => {
         url:<Input inpState={[url, setUrl]} type ='text' />
       </div>
       <button onClick={createBlog}>create</button>
+      <div>
+      <button onClick={onToggle}>cancel</button>      
+      </div>      
     </div>
  )
 }
+
+const Header = ({onToggle}) => (
+  <button onClick={onToggle}>new note</button>
+)
+const CreateBlog = ({blogsState, displayNotification, blogFormRef}) =>(
+<Togglable  header={<Header />}>
+    <CreateBlogBody blogsState={blogsState} displayNotification={displayNotification}
+    blogFormRef={blogFormRef}/>
+    </Togglable>
+)
+
 
 export default CreateBlog

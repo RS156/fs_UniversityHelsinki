@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import CreateBlog from './components/CreateBlog'
 import Login from './components/Login'
 import Utils from './components/Utils'
 import blogService from './services/blogs'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState({info:null, className:null})
+  const blogFormRef = useRef()  
 
   useEffect(() => {
     const getData = async () =>{
@@ -20,12 +22,22 @@ const App = () => {
 
   useEffect(() => {
     const JsonUser = window.localStorage.getItem('loggedinBlogAppUser')
-
+    
     if(JsonUser)
     {
-      setUser(JSON.parse(JsonUser)) 
-    }       
+      const u = JSON.parse(JsonUser)
+      setUser(u) 
+      
+    }  
+        
   }, [])
+
+  useEffect(() => {
+    if(user)
+    {
+      blogService.setToken(user.token)
+    }
+  }, [user])
 
   console.log('render check', notification)
 
@@ -48,9 +60,15 @@ const App = () => {
     <Utils.Notification info={notification.info} className={notification.className} />    
     <div>{user.name} logged in <button onClick={handleLogout}>logout</button></div>     
     <br />
-    <CreateBlog blogsState={[blogs, setBlogs]} displayNotification={setNotificationWithTimeout}/>
-    {blogs.map(blog =>
-    <Blog key={blog.id} blog={blog} />)}
+    <CreateBlog blogsState={[blogs, setBlogs]} displayNotification={setNotificationWithTimeout}
+    blogFormRef={blogFormRef}/>    
+    {blogs.sort((a,b) => {
+      return ((a.likes>b.likes) ? -1 
+      : (a.likes<b.likes) ? 1 :0) 
+    })
+    .map(blog =>
+    <Blog key={blog.id} blog={blog} user={user}
+    blogsState={[blogs, setBlogs]} />)}
 
   </div> 
   )
