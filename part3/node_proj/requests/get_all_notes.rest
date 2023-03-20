@@ -33,7 +33,7 @@ Content-Type: application/json
 {
     "username" : "rs13",
     "name" : "rishabh",
-    "password": "p"
+    "password": "psddssd"
 }
 
 ###

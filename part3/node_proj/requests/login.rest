@@ -5,3 +5,6 @@ Content-Type: application/json
    "username" : "rs",
    "password" : "Password"
 }
+
+###
+POST http://localhost:3001/api/testing/reset

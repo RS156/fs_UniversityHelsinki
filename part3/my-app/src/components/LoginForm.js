@@ -33,13 +33,13 @@ const LoginForm = ({ setUser, setErrorMessage }) => {
   return (<form onSubmit={handleLogin} >
     <div>
             username
-      <Input inputState={[username, setUsername]} type='text' />
+      <Input inputState={[username, setUsername]} type='text' id='username' />
     </div>
     <div>
             password
-      <Input inputState={[password, setPassword]} type='password' />
+      <Input inputState={[password, setPassword]} type='password' id='password' />
     </div>
-    <button type='submit'>login</button>
+    <button id='login-button' type='submit'>login</button>
   </form>)
 }
 

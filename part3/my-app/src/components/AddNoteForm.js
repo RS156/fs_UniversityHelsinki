@@ -13,7 +13,7 @@ const AddNote = ({ noteState, noteFormRef }) => {
     noteFormRef.current.toggleVisibility()
     const newNoteObj = {
       content: newNote,
-      important: Math.random() < 0.5
+      important: true
     }
     noteService
       .create(newNoteObj)
@@ -26,7 +26,7 @@ const AddNote = ({ noteState, noteFormRef }) => {
   return (<div className='formDiv'>
     <h2>Create a new note</h2>
     <form onSubmit={handleAddNote}>
-      <Input inputState={[newNote, setNewNote]} type='text' />
+      <Input id='note-input' inputState={[newNote, setNewNote]} type='text' />
       <button type='submit'>save</button>
     </form>
   </div>)
