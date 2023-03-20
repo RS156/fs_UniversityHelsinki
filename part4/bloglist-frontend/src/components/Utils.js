@@ -1,6 +1,6 @@
-const Input = ({ inpState, type }) => {
+const Input = ({ inpState, type, id }) => {
     const [inp, setInp] = inpState
-    return (<input value={inp} 
+    return (<input value={inp} id={id}
         onChange={({ target }) => setInp(target.value)} type={type} />
     )
 }

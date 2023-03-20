@@ -23,10 +23,10 @@ const Togglable = forwardRef(({ children, header }, refs) => {
 
 
   return (<div>
-    <div style={hideWhenVisible}>
+    <div style={hideWhenVisible} className='togglableHeader'>
       {headerWithButton}
     </div>
-    <div style={showWhenVisible}>
+    <div style={showWhenVisible} className='togglableContent'>
       {childrenWithButton}
     </div>
   </div>)

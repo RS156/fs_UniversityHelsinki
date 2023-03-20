@@ -1,48 +1,35 @@
 import { useState } from "react"
 import Utils from "./Utils"
-import blogService from '../services/blogs'
 import Togglable from "./Togglable"
 
 const Input = Utils.Input
 
-const CreateBlogBody = ({blogsState, displayNotification, blogFormRef, onToggle}) => {
+const CreateBlogBody = ({onToggle, onCreate}) => {
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  const [blogs, setBlogs] = blogsState  
   
   
   const createBlog = async (event) =>{
     event.preventDefault()
-    try{
-      const response = await blogService.create({title, author, url})
-      displayNotification({info:`a new blog '${response.title}' by ${response.author} added`, 
-      className:'notification'})
-    setBlogs(await blogService.getAll()) 
     setTitle('')
     setAuthor('')
     setUrl('')    
-    }
-    catch(exception)
-    {
-      displayNotification({info:`blog was not added. Message ${exception.message}`, 
-      className:'notification error'})
-    }
-    blogFormRef.current.toggleVisibility()    
+    onCreate(title, author, url)   
   }
   
  return (
-    <div>
+    <div id='createBlogForm'>
         <h2>create new</h2>
       <div>
-        title:<Input inpState={[title, setTitle]} type ='text' />
+        title:<Input id='titleInp' inpState={[title, setTitle]} type ='text' />
       </div>
       <div>
-        author:<Input inpState={[author, setAuthor]} type ='text' />
+        author:<Input id='authorInp' inpState={[author, setAuthor]} type ='text' />
       </div>
       <div>
-        url:<Input inpState={[url, setUrl]} type ='text' />
+        url:<Input id='urlInp' inpState={[url, setUrl]} type ='text' />
       </div>
       <button onClick={createBlog}>create</button>
       <div>
@@ -55,10 +42,9 @@ const CreateBlogBody = ({blogsState, displayNotification, blogFormRef, onToggle}
 const Header = ({onToggle}) => (
   <button onClick={onToggle}>new note</button>
 )
-const CreateBlog = ({blogsState, displayNotification, blogFormRef}) =>(
+const CreateBlog = ({onCreate}) =>(
 <Togglable  header={<Header />}>
-    <CreateBlogBody blogsState={blogsState} displayNotification={displayNotification}
-    blogFormRef={blogFormRef}/>
+    <CreateBlogBody  onCreate={onCreate}  />
     </Togglable>
 )
 

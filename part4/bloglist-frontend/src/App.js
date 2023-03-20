@@ -55,20 +55,49 @@ const App = () => {
     }, time)
   }
 
+  const handleOnDelete =  async (blog) => {
+    if(window.confirm(`remove blog ${blog.title} by ${blog.author}`))
+    {   
+        await blogService.deleteOne(blog.id)
+        setBlogs(await blogService.getAll())
+    }}
+
+    const handleOnLike = async (blog, setLikes) => {
+      const request = blog
+      request.likes=request.likes + 1
+      request.user = request.user?._id
+      const response = await blogService.update(blog.id, request)
+      setLikes(response.likes)
+    }
+
+    const handleOnCreate = async (title, author, url) =>{      
+      try{
+        const response = await blogService.create({title, author, url})
+        setNotificationWithTimeout({info:`a new blog '${response.title}' by ${response.author} added`, 
+        className:'notification'})
+      setBlogs(await blogService.getAll())           
+      }
+      catch(exception)
+      {
+        setNotificationWithTimeout({info:`blog was not added. Message ${exception.message}`, 
+        className:'notification error'})
+      }
+      blogFormRef.current.toggleVisibility()    
+    }
+
   const Blogs = () => (<div>
     <h2>blogs</h2>  
     <Utils.Notification info={notification.info} className={notification.className} />    
     <div>{user.name} logged in <button onClick={handleLogout}>logout</button></div>     
     <br />
-    <CreateBlog blogsState={[blogs, setBlogs]} displayNotification={setNotificationWithTimeout}
-    blogFormRef={blogFormRef}/>    
+    <CreateBlog  onCreate={handleOnCreate} />    
     {blogs.sort((a,b) => {
       return ((a.likes>b.likes) ? -1 
       : (a.likes<b.likes) ? 1 :0) 
     })
     .map(blog =>
     <Blog key={blog.id} blog={blog} user={user}
-    blogsState={[blogs, setBlogs]} />)}
+    onDelete={handleOnDelete} onLike={handleOnLike}/>)}
 
   </div> 
   )
