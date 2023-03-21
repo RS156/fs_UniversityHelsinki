@@ -1,13 +1,13 @@
 describe('Note app', function () {
   beforeEach(function () {
-    cy.request('POST', 'http://localhost:3001/api/testing/reset')
+    cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
     const user = {
       name : 'Rishabh Sarkar',
       username:'rsarkar',
       password : 'Password'
     }
-    cy.request('POST','http://localhost:3001/api/users', user)    
-    cy.visit('http://localhost:3000/')
+    cy.request('POST',`${Cypress.env('BACKEND')}/users`, user)    
+    cy.visit('')
   })
 
   it('front page can be opened', function () {
@@ -61,20 +61,63 @@ describe('Note app', function () {
 
     describe('and a note exists', function(){
       beforeEach(function(){
-        cy.contains('new note').click()
-        cy.get('#note-input').type('another note cypress')
-        cy.contains('save').click()
-        cy.contains('another note cypress')
+        cy.createNote({
+          content : 'another note cypress',
+          important : true
+        })
       })
 
       it('it can be made not important', function(){
         cy.contains('another note cypress')
+        .parent()
+        .find('button')
+        .as('theButton')
+
+        cy.get('@theButton')
         .contains('make not important')
         .click()
 
-        cy.contains('another note cypress')
+        cy.get('@theButton')
         .contains('make important')
       })
     })
+
+    describe('and several notes exist', function(){
+      beforeEach(function(){
+        cy.createNote({
+          content : 'first note',
+          important : false
+        })
+        cy.createNote({
+          content : 'second note',
+          important : false
+        })
+        cy.createNote({
+          content : 'third',
+          important : false
+        })
+      })
+
+      it('one of those notes can be made important', function(){
+        cy.contains('second note')
+        .parent()
+        .find('button')
+        .as('theButton')
+
+        cy.get('@theButton').click()
+
+        cy.get('@theButton')
+        .should('contain','make not important')
+      })
+
+      it.only('then example', function(){
+        cy.get('button')
+        .then(buttons => {
+          console.log('number of buttons', buttons.length);
+          console.log('buttons data', buttons);
+          cy.wrap(buttons[0]).click()
+        })
+      })
   })
+})
 })
