@@ -46,7 +46,7 @@ const Header = ({ onToggle }) => <button onClick={onToggle}>new note</button>;
 const CreateBlog = ({ onCreate, visbilityState }) => {
   //console.log('Create blog re-render');  
   return (
-    <Togglable header={<Header />} >
+    <Togglable visibleState={visbilityState} header={<Header />} >
       <CreateBlogBody onCreate={onCreate} />
     </Togglable>
   );

@@ -7,13 +7,14 @@ import blogService from './services/blogs'
 //import Togglable from './components/Togglable'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const [blogs, setBlogs] = useState([])  
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState({info:null, className:null})
+  const [createBlogVisible, setCreateBlogVisibile] =useState(false)
   const blogFormRef = useRef()  
 
-  console.log('App re-render');
-  console.log('App states', blogs, user, notification);
+  //console.log('App re-render');
+  //console.log('App states', blogs, user, notification);
 
   useEffect(() => {
     const getData = async () =>{
@@ -32,9 +33,9 @@ const App = () => {
     {
       const u = JSON.parse(JsonUser)
       setUser(u) 
-      console.log('user set');
+      //console.log('user set');
     }  
-    console.log('going out of users');
+    //console.log('going out of users');
         
   }, [])
 
@@ -64,9 +65,10 @@ const App = () => {
   const handleOnDelete =  async (blog) => {
     if(window.confirm(`remove blog ${blog.title} by ${blog.author}`))
     {   
-        await blogService.deleteOne(blog.id)
-        const blogData = await blogService.getAll()
-        setBlogs(blogData)
+        const response = await blogService.deleteOne(blog.id)
+        console.log(response);
+        //const blogData = await blogService.getAll()
+        setBlogs(blogs.filter(b => (b.id!==blog.id)))
     }}
 
     const handleOnLike = async (blog, setLikes) => {
@@ -80,16 +82,19 @@ const App = () => {
     const handleOnCreate = async (title, author, url) =>{      
       try{
         const response = await blogService.create({title, author, url})
+        console.log(response);
+        console.log(blogs);
         setNotificationWithTimeout({info:`a new blog '${response.title}' by ${response.author} added`, 
         className:'notification'})
-      setBlogs(await blogService.getAll())           
+        const blogData = await blogService.getAll()
+      setBlogs(blogData)           
       }
       catch(exception)
       {
         setNotificationWithTimeout({info:`blog was not added. Message ${exception.message}`, 
         className:'notification error'})
       }
-      blogFormRef?.current?.toggleVisibility()    
+      //blogFormRef?.current?.toggleVisibility()    
     }
 
   const Blogs = () => (<div>
@@ -97,7 +102,7 @@ const App = () => {
     <Utils.Notification info={notification.info} className={notification.className} />    
     <div>{user.name} logged in <button id='logout-button' onClick={handleLogout}>logout</button></div>     
     <br />
-    <CreateBlog  onCreate={handleOnCreate} />    
+    <CreateBlog  onCreate={handleOnCreate} visbilityState={[createBlogVisible, setCreateBlogVisibile]}/>    
     {blogs.sort((a,b) => {
       return ((a.likes>b.likes) ? -1 
       : (a.likes<b.likes) ? 1 :0) 

@@ -1,14 +1,15 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJzMTIyIiwiaWQiOiI2NDA0ZWNmODNlYmNjMjQ4ZTM0ZDIwYTYiLCJpYXQiOjE2NzgwODE1NTF9.-_ODa6Ul96KTa_AsK3dgxbeMENjKXJ_Gzn-FRHOe5oI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJTX1RFU1QiLCJpZCI6IjY0MWFhZGMxMjY0NThkNTg5YTBhMTRmMyIsImlhdCI6MTY3OTQ3MDExMH0.eRs0UzXecK_9mZ_JdHiS1IjFlXqFjVJZTv9vwiCNwoY
 
 {
-    "title" : "blog post 6",
-    "author" : "Rishabh Sarkar",
-    "url" : "http://localhost:3003/api/blogs",
-    "likes" : 11,
-    "user" : "6404ecf83ebcc248e34d20a6"
-}
+    "_id": "5a422a851b54a676234d17f7",
+    "title": "React patterns",
+    "author": "Michael Chan",
+    "url": "https://reactpatterns.com/",
+    "likes": 7,
+    "__v": 0
+  }
 
 ###
 DELETE http://localhost:3003/api/blogs/64058dffd62866621dd72e4e

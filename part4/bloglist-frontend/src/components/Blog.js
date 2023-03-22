@@ -44,7 +44,7 @@ const Likes= ({blog, onLike}) => {
   const [likes, setLikes] = useState(blog.likes)
 
   return (
-    <div>likes {likes}
+    <div className='blogLikesContainer'>likes {likes}
     <button onClick={()=>{onLike(blog,setLikes)}} style={buttonStyle}>like</button></div>
   )
 } 
@@ -52,7 +52,8 @@ const Likes= ({blog, onLike}) => {
 
 
 const Blog = ({ blog, user, onDelete, onLike }) => {
-  return (<Togglable header={<BlogTitle blog={blog} />}>
+  const [visible, setVisible] = useState(false)
+  return (<Togglable visibleState={[visible, setVisible]} className='blogContainer' header={<BlogTitle blog={blog} />}>
     <BlogDetail blog={blog} user={user} onDelete={onDelete} onLike={onLike} />
   </Togglable>)
 }

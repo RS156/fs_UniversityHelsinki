@@ -1,9 +1,9 @@
 import { forwardRef, useImperativeHandle, useState, cloneElement } from 'react'
 import PropTypes from 'prop-types'
 
-const Togglable = forwardRef(({ children, header }, refs) => {
+const Togglable = forwardRef(({ children, header, className, visibleState }, refs) => {
 
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = visibleState
 
   const hideWhenVisible = { display : visible ? 'none' : '' }
   const showWhenVisible = { display : visible ? '' : 'none' }
@@ -23,7 +23,7 @@ const Togglable = forwardRef(({ children, header }, refs) => {
   const childrenWithButton = cloneElement(children, { onToggle : toggleVisibility })
 
 console.log('visible value', visible);
-  return (<div>    
+  return (<div className={className}>    
     <div style={hideWhenVisible} className='togglableHeader'>
       {headerWithButton}
     </div>
