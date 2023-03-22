@@ -10,3 +10,6 @@ Content-Type: application/json
 
 ###
 GEt http://localhost:3003/api/users
+
+###
+POST http://localhost:3003/api/testing/reset

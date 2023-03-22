@@ -9,6 +9,7 @@ const Togglable = forwardRef(({ children, header }, refs) => {
   const showWhenVisible = { display : visible ? '' : 'none' }
 
   const toggleVisibility =() => {
+    //console.log('toglgle visibility clled- prevous value', visible);
     setVisible(!visible)
   }
 
@@ -21,14 +22,14 @@ const Togglable = forwardRef(({ children, header }, refs) => {
   const headerWithButton = cloneElement(header, { onToggle : toggleVisibility })
   const childrenWithButton = cloneElement(children, { onToggle : toggleVisibility })
 
-
-  return (<div>
+console.log('visible value', visible);
+  return (<div>    
     <div style={hideWhenVisible} className='togglableHeader'>
       {headerWithButton}
     </div>
     <div style={showWhenVisible} className='togglableContent'>
       {childrenWithButton}
-    </div>
+    </div>    
   </div>)
 })
 

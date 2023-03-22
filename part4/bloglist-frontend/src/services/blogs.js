@@ -7,6 +7,7 @@ const setToken = userToken =>{
 }
 
 const getAll = async () => {
+  console.trace()
   const response = await axios.get(baseUrl)
   return response.data
 }

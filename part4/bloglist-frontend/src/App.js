@@ -4,7 +4,7 @@ import CreateBlog from './components/CreateBlog'
 import Login from './components/Login'
 import Utils from './components/Utils'
 import blogService from './services/blogs'
-import Togglable from './components/Togglable'
+//import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -12,9 +12,14 @@ const App = () => {
   const [notification, setNotification] = useState({info:null, className:null})
   const blogFormRef = useRef()  
 
+  console.log('App re-render');
+  console.log('App states', blogs, user, notification);
+
   useEffect(() => {
     const getData = async () =>{
-      setBlogs (await blogService.getAll())      
+      const blogData = await blogService.getAll()
+      setBlogs(blogData)    
+      console.log('blog set');  
     }  
     getData()
   }, [])
@@ -27,8 +32,9 @@ const App = () => {
     {
       const u = JSON.parse(JsonUser)
       setUser(u) 
-      
+      console.log('user set');
     }  
+    console.log('going out of users');
         
   }, [])
 
@@ -39,7 +45,7 @@ const App = () => {
     }
   }, [user])
 
-  console.log('render check', notification)
+  //console.log('render check', notification)
 
   const handleLogout =() => {
     window.localStorage.clear()
@@ -59,7 +65,8 @@ const App = () => {
     if(window.confirm(`remove blog ${blog.title} by ${blog.author}`))
     {   
         await blogService.deleteOne(blog.id)
-        setBlogs(await blogService.getAll())
+        const blogData = await blogService.getAll()
+        setBlogs(blogData)
     }}
 
     const handleOnLike = async (blog, setLikes) => {
@@ -82,13 +89,13 @@ const App = () => {
         setNotificationWithTimeout({info:`blog was not added. Message ${exception.message}`, 
         className:'notification error'})
       }
-      blogFormRef.current.toggleVisibility()    
+      blogFormRef?.current?.toggleVisibility()    
     }
 
   const Blogs = () => (<div>
     <h2>blogs</h2>  
     <Utils.Notification info={notification.info} className={notification.className} />    
-    <div>{user.name} logged in <button onClick={handleLogout}>logout</button></div>     
+    <div>{user.name} logged in <button id='logout-button' onClick={handleLogout}>logout</button></div>     
     <br />
     <CreateBlog  onCreate={handleOnCreate} />    
     {blogs.sort((a,b) => {

@@ -110,7 +110,7 @@ describe('Note app', function () {
         .should('contain','make not important')
       })
 
-      it.only('then example', function(){
+      it('then example', function(){
         cy.get('button')
         .then(buttons => {
           console.log('number of buttons', buttons.length);

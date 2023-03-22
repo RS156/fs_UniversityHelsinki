@@ -34,12 +34,12 @@ const Login = ({ userState, displayNotification, notificationState }) => {
       <h2>log in to the application</h2>
       <Utils.Notification info={notification.info} className={notification.className} />
       <div>
-        username<Input inpState={[username, setUsername]} type ='text' />
+        username<Input id='username' inpState={[username, setUsername]} type ='text' />
       </div>
       <div>
-        password<Input inpState={[password, setPassword]} type ='password' />
+        password<Input id='password' inpState={[password, setPassword]} type ='password' />
       </div>
-      <button onClick={handleLogin}>login</button>
+      <button id='login-button' onClick={handleLogin}>login</button>
     </div>
   )
 }
